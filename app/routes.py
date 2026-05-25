@@ -7,11 +7,11 @@ from schemas import (
 )
 from app.api import process_chat
 
-router = APIRouter()
+router = APIRouter(tags=["virtual_assistant"])
 
 
 @router.post(
-    "/support/chatbot",
+    "/support/virtual_assistant",
     response_model=ChatResponse
 )
 async def chatbot(

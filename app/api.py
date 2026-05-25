@@ -1,8 +1,7 @@
 
 import time
-
 from app.ask import ask
-
+from app.response_cleaner import clean_llm_response
 from schemas import (
     ChatRequest,
     ChatResponse
@@ -22,6 +21,8 @@ async def process_chat(
     response = ask(
         request.query
     )
+    
+    response=clean_llm_response(response)
 
     response_time = round(
         time.time() - start_time,
@@ -30,14 +31,24 @@ async def process_chat(
 
     return ChatResponse(
 
-        title="Fixy RAG Assistant",
+        title=response.get("title","no title"),
+        
+        section=response.get("section", "General"),
 
         response_time=response_time,
 
-        code=200,
+        code=response.get("code", 0),
+        
+        name=response.get("code_title")['name'] if response.get("code_title") else "Unknown",
 
-        description=
-        "Response generated successfully",
+        description=response.get("code_title")['description']if response.get("code_title") else "Unknown",
 
-        response=response
+        response=response.get("response", "No response")    
+        
+        escalate_to_support=response.get("needs_support", False),
+        
+        source=response.get("source", "Unknown"),
+        
     )
+    
+ 

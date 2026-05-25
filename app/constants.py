@@ -37,7 +37,7 @@ CODES = {
     },
     2000: {
         "name": "escalate_to_support",
-        "description": "No answer → forward to support API"
+        "description": "No answer → forward to support team"
     },
     3000: {
         "name": "out_of_scope",

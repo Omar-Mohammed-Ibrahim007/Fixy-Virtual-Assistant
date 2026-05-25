@@ -18,11 +18,20 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
 
     title: str
+    
+    section: str
 
     response_time: float
 
     code: int
+    
+    name: str
 
     description: str
 
     response: str
+    
+    escalate_to_support: bool
+    
+    source: str
+    
