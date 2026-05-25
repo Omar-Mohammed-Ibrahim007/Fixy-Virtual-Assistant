@@ -1,4 +1,4 @@
-from embeddings import embeddings_model
+from app.embeddings import embeddings_model
 import numpy as np
 
 def retrieve(query, index, texts, k=5):

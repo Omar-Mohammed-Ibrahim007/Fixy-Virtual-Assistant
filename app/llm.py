@@ -1,5 +1,5 @@
 from huggingface_hub import hf_hub_download
-from constants import MODEL_REPO, MODEL_FILE
+from app.constants import MODEL_REPO, MODEL_FILE
 
 
 model_path = hf_hub_download(

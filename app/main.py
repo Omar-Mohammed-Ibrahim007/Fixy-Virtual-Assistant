@@ -1,8 +1,8 @@
 # routes.py
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from routes import process_chat
-from data_cleaner import cleaner_main
-from ask import ask
+from app.routes import process_chat
+from app.data_cleaner import cleaner_main
+from app.ask import ask
 
 router = APIRouter()
 cleaner_main()

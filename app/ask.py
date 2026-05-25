@@ -2,12 +2,12 @@ from langchain import Llama
 import faiss
 import json
 import os
-from constants import INDEX_PATH, TEXTS_PATH, MODEL_PATH
-from llm import model_path
-from retrieve import retrieve
-from build_prompt import build_prompt
-from faiss_builder import build_index, save_index
-from chunker import load_data, chunk_documents
+from app.constants import INDEX_PATH, TEXTS_PATH, MODEL_PATH
+from app.llm import model_path
+from app.retrieve import retrieve
+from app.build_prompt import build_prompt
+from app.faiss_builder import build_index, save_index
+from app.chunker import load_data, chunk_documents
 
 llm = Llama( model_path=model_path,
              n_ctx=40960,

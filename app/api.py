@@ -1,8 +1,8 @@
 import time
 
-from ask import ask
+from app.ask import ask
 
-from schemas import (
+from app.schemas import (
     ChatRequest,
     ChatResponse
 )

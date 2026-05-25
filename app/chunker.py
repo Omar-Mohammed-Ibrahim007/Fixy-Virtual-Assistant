@@ -1,7 +1,7 @@
-from constants import Assets_dir, MODEL_NAME
+from app.constants import Assets_dir, MODEL_NAME
 import json
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from faiss_builder import build_index, save
+from app.faiss_builder import build_index, save
 
 
 
