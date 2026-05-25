@@ -1,16 +1,13 @@
 # routes.py
 
 from fastapi import APIRouter
-from app.routes import process_chat
-from app.schemas import (
+from schemas import (
     ChatRequest,
     ChatResponse
 )
-from app.data_cleaner import cleaner_main
+from app.api import process_chat
 
-router = APIRouter(prefix="/chatbot")
-
-cleaner_main()
+router = APIRouter()
 
 
 @router.post(

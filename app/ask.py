@@ -2,12 +2,14 @@ from langchain import Llama
 import faiss
 import json
 import os
-from app.constants import INDEX_PATH, TEXTS_PATH, MODEL_PATH
+from app.constants import INDEX_PATH, TEXTS_PATH, CODES
 from app.llm import model_path
 from app.retrieve import retrieve
 from app.build_prompt import build_prompt
 from app.faiss_builder import build_index, save_index
 from app.chunker import load_data, chunk_documents
+from app.response_cleaner import clean_llm_response
+
 
 llm = Llama( model_path=model_path,
              n_ctx=40960,
@@ -83,52 +85,28 @@ def ask(query):
 
         max_tokens=4096,
 
-        temperature=0.3,
+        temperature=0.1,
 
-        top_p=0.9,
+        top_p=0.8,
 
-        top_k=40,
+        top_k=20,
 
-        repeat_penalty=1.2,
+        repeat_penalty=1.1,
+        
+        presence_penalty = 1.5,
 
         stop=[
-       "<|im_end|>",
+         "<|im_end|>",
         "<|im_start|>",
-        "</s>"]
+        "</s>",]
     )
 
     response = output["choices"][0]["text"].strip()
 
  
 
-    return response
+    return clean_llm_response(response)
 
 
-# =====================================================
-# BUILD INDEX FIRST TIME
-# =====================================================
-
-if not os.path.exists(INDEX_PATH):
-
-    print("[+] Building vector database...")
-
-    data = load_data()
-
-    chunks = chunk_documents(data)
-
-    print(f"[+] Total chunks: {len(chunks)}")
-
-    index = build_index(chunks)
-
-    save_index(index, chunks)
-
-    print("[✓] Vector DB Ready")
-
-
-# =====================================================
-# LOAD INDEX
-# =====================================================
-
-index, texts = load_index()
 
 

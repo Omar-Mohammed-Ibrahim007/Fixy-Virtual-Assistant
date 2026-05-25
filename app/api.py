@@ -1,8 +1,9 @@
+
 import time
 
 from app.ask import ask
 
-from app.schemas import (
+from schemas import (
     ChatRequest,
     ChatResponse
 )
@@ -16,15 +17,12 @@ async def process_chat(
         **request_data
     )
 
-    # TIMER START
     start_time = time.time()
 
-    # RAG FUNCTION
     response = ask(
         request.query
     )
 
-    # TIMER END
     response_time = round(
         time.time() - start_time,
         2

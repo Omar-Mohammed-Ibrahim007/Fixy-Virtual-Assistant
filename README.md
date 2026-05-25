@@ -57,12 +57,34 @@ EMAIL_API_KEY = "your-email-api-key"
 Start the FastAPI app with Uvicorn:
 
 ```powershell
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Then connect to the WebSocket endpoint at:
+## API Endpoints
 
-- `ws://localhost:8000/ws/chat`
+### REST API
+
+- **Health Check**: `GET http://localhost:8000/health`
+- **Chat Query**: `POST http://localhost:8000/api/chat`
+  - Request body: `{"query": "your question here"}`
+- **System Info**: `GET http://localhost:8000/api/info`
+- **API Docs**: `GET http://localhost:8000/docs` (Swagger UI)
+
+## Deployment
+
+### Hugging Face Spaces
+
+Deploy your RAG application to Hugging Face Spaces using Docker:
+
+1. Push your repository to GitHub
+2. Go to [Hugging Face Spaces](https://huggingface.co/spaces) and create a new Space
+3. Select **Docker** as the space type
+4. Connect your GitHub repository
+5. Hugging Face will automatically build and deploy using the included Dockerfile
+
+The application will be accessible at: `https://<your-username>-<space-name>.hf.space`
+
+**Note:** The Dockerfile is configured to run on port 7860 (required by Hugging Face Spaces).
 
 ## Workflow
 
