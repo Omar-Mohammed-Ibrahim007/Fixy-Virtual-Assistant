@@ -80,6 +80,8 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 The provided `assets/Dockerfile` is configured for:
 
+- Base image: `python:3.11-slim`
+- Non-root user: `user` (recommended for Hugging Face Spaces)
 - Port: `7860`
 - Host binding: `0.0.0.0`
 - Hugging Face cache envs:
@@ -87,7 +89,10 @@ The provided `assets/Dockerfile` is configured for:
   - `TRANSFORMERS_CACHE`
   - `HF_HUB_CACHE`
 
-Build/run instructions are documented in `assets/Dockerfile` behavior (see `CMD ... --port ${PORT}`).
+Startup command in the Dockerfile:
+- `uvicorn app.main:app --host 0.0.0.0 --port 7860`
+
+Dependencies are installed from `assets/requirements.txt` into `/app/requirements.txt` during image build.
 
 ## API Usage (support assistant)
 
