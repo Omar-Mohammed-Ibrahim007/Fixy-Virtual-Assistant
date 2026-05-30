@@ -10,7 +10,8 @@ ENV PYTHONUNBUFFERED=1 \
     XDG_CACHE_HOME=/tmp/hf_cache \
     TORCH_HOME=/tmp/hf_cache/torch \
     CMAKE_BUILD_PARALLEL_LEVEL=2
-
+    
+RUN rm -rf /tmp/hf_cache /tmp/torch /tmp/*cache* || true
 # System dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -18,6 +19,8 @@ RUN apt-get update && \
     cmake \
     git && \
     rm -rf /var/lib/apt/lists/*
+
+
 
 # Create non-root user
 RUN useradd -m -u 1000 user
