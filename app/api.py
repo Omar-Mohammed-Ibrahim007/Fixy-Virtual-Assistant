@@ -2,27 +2,30 @@
 import time
 from app.ask import ask
 from app.response_cleaner import clean_llm_response
-from schemas import (
-    ChatRequest,
+from app.schemas import (
+    ChatGetRequest,
+    ChatPostRequest,
     ChatResponse
 )
 from app.get_user_data import get_user_data 
-from app.email import email_send
+from app.email_service import email_send
 
 async def process_chat(
-    request_data: dict
+    request_data: dict # post request data sended by client
 ) -> ChatResponse:
 
-    request = ChatRequest(
+    get_request = await ChatGetRequest( # get request
     **get_user_data()
     )
-
+    post_request=ChatPostRequest(
+        **request_data
+    )
     start_time = time.time()
 
     response = ask(
-        request.query,
-        request.role,
-        request.language
+        post_request.query,
+        get_request.role,
+        get_request.language
     )
     
     response=clean_llm_response(response)
@@ -37,14 +40,14 @@ async def process_chat(
      
     if response.get("needs_support", False):
         email_send(
-            request.language,
+            get_request.language,
             response.get("title", "null"),
             response.get("code", "null"),
-            request.userID,
-            request.role,
-            request.email,
+            get_request.userID,
+            get_request.role,
+            get_request.email,
             response.get("name","null" ),
-            request.query,
+            post_request.query,
             response_time
         )
 

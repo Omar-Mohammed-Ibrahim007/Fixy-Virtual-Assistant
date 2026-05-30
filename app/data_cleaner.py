@@ -1,7 +1,7 @@
 import json
 import re
 from pdfminer.high_level import extract_text
-from app.constants import INPUT_PDF, OUTPUT_JSON, Assets_dir
+from app.constants import INPUT_PDF,  Assets_dir
 
 
 titles=[]

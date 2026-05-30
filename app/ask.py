@@ -1,16 +1,13 @@
-from langchain import Llama
+from llama_cpp import Llama
 import faiss
 import json
 import os
-from app.constants import INDEX_PATH, TEXTS_PATH, CODES
+from app.constants import INDEX_PATH, TEXTS_PATH
 from app.llm import model_path
 from app.retrieve import retrieve
 from app.build_prompt import build_prompt
-from app.faiss_builder import build_index, save_index
-from app.chunker import load_data, chunk_documents
 from app.response_cleaner import clean_llm_response
-from app.get_user_data import content
-from app.schemas import ChatRequest
+
 
 
 llm = Llama( model_path=model_path,

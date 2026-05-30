@@ -1,8 +1,9 @@
 # routes.py
 
 from fastapi import APIRouter
-from schemas import (
-    ChatRequest,
+from app.schemas import (
+    ChatGetRequest,
+    ChatPostRequest,
     ChatResponse
 )
 from app.api import process_chat
@@ -15,7 +16,7 @@ router = APIRouter(tags=["virtual_assistant"])
     response_model=ChatResponse
 )
 async def chatbot(
-    request: ChatRequest
+    request: ChatPostRequest 
 ):
 
     result = await process_chat(

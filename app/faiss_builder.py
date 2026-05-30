@@ -1,6 +1,6 @@
 import json
 import faiss
-from app.constants import Assets_dir, MODEL_NAME, INDEX_PATH, TEXTS_PATH
+from app.constants import  INDEX_PATH, TEXTS_PATH
 import numpy as np
 from app.embeddings import embeddings_model
 def build_index(chunks):

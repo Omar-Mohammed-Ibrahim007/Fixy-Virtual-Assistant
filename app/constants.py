@@ -1,6 +1,5 @@
 import os
 from dotenv import load_dotenv
-from app.get_user_data import content
 
 load_dotenv()
 
@@ -57,6 +56,16 @@ CODES = {
         "description": "Initial greeting message. The assistant introduces itself and explains the Fixy platform."
     },
   }
+
+code='123'
+user='123'
+role='123'
+email='123'
+Type='123'
+query='123'
+time='123'
+
+
 
 messages = {
 

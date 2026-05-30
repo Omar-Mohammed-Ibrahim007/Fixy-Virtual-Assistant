@@ -5,10 +5,11 @@ from typing import Optional
 # ==========================================
 # REQUEST MODEL
 # ==========================================
-
-class ChatRequest(BaseModel):
-
+class ChatPostRequest(BaseModel):
     query: str
+    
+    
+class ChatGetRequest(BaseModel):
     email: str
     role: str
     userID: int

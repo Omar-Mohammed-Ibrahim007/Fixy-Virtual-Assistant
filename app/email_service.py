@@ -11,8 +11,6 @@ from app.constants import (
     SENDER_EMAIL_PASSWORD,
     messages
 )
-from app.get_user_data import content
-
 
 def email_send( 
             language,

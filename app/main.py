@@ -1,7 +1,6 @@
 # routes.py
-from fastapi import APIRouter, FastAPI
+from fastapi import  FastAPI
 from app.data_cleaner import cleaner_main
-from app.ask import ask
 from app.routes import router
 from app.chunker import chunker_main
 from contextlib import asynccontextmanager
