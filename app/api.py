@@ -1,6 +1,5 @@
 
 import time
-from app.ask import ask, load_index
 from app.schemas import (
     ChatGetRequest,
     ChatPostRequest,
