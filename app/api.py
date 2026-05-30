@@ -9,9 +9,10 @@ from app.schemas import (
 from app.get_user_data import get_user_data 
 from app.email_service import email_send
 
-from app.main import index,texts
 async def process_chat(
-    request_data: dict # post request data sended by client
+    request_data: dict,
+    index,
+    texts# post request data sended by client
 ) -> ChatResponse:
 
     get_request =  ChatGetRequest( # get request
