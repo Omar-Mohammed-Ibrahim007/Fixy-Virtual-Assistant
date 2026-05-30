@@ -3,8 +3,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-Dataset_dir='./Fixy_RAG/data'
-Assets_dir='./Fixy_RAG/assets'
+Dataset_dir = './data'
+Assets_dir = './assets'
 
 MODEL_NAME = "BAAI/bge-m3" 
 INDEX_PATH = f"{Assets_dir}/faiss.index"
@@ -15,7 +15,7 @@ INPUT_PDF =f'{Dataset_dir}/Fixy_RAG_Production_English.pdf'
 OUTPUT_JSON = f"{Assets_dir}/rag_english_data.json"
 
 MODEL_REPO = "Qwen/Qwen3-4B-GGUF"
-MODEL_FILE = "Qwen3-4B-Q6_K.gguf"
+MODEL_FILE = "Qwen3-4B-Q8_0.gguf"
 
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
