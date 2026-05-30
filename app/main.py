@@ -11,15 +11,13 @@ from app.api import load_index
 async def lifespan(app: FastAPI):
     cleaner_main()
     chunker_main()
+    state.index, state.texts = load_index()
+    print("✅ FAISS index loaded once at startup")
+    
     yield
     
 app = FastAPI(lifespan=lifespan)
 
 
-@app.on_event("startup")
-def startup_event():
-    state.index, state.texts = load_index()
-    print("✅ FAISS index loaded once at startup")
-    
 app.include_router(router)
 

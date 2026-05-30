@@ -37,7 +37,7 @@ def load_index():
 async def process_chat(
     request_data: dict# post request data sended by client
 ) -> ChatResponse:
-
+ try:
     get_request =  ChatGetRequest( # get request
     **get_user_data()
     )
@@ -103,5 +103,8 @@ async def process_chat(
         source=response.get("source", "Unknown"),
         
     )
-    
+ except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise   
  

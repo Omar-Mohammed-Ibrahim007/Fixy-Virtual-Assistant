@@ -23,7 +23,7 @@ llm = Llama( model_path=model_path,
 
 def ask(query,role,language,index,texts):
 
-   
+  try: 
 
     # -------------------------------------------------
     # RETRIEVE
@@ -81,10 +81,14 @@ def ask(query,role,language,index,texts):
     )
 
     response = output["choices"][0]["text"].strip()
-
- 
-
+    
     return clean_llm_response(response)
+  except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise
+
+   
 
 
 
