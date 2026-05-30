@@ -1,7 +1,6 @@
 
 import time
 from app.ask import ask, load_index
-from app.response_cleaner import clean_llm_response
 from app.schemas import (
     ChatGetRequest,
     ChatPostRequest,
@@ -57,7 +56,7 @@ async def process_chat(
     )
     
     print("We almost there..") 
-    response=clean_llm_response(response)
+    
    
    
       
