@@ -2,7 +2,7 @@ from llama_cpp import Llama
 import faiss
 import json
 import os
-from app.constants import INDEX_PATH, TEXTS_PATH
+from app.constants import  TEXTS_PATH
 from app.llm import model_path
 from app.retrieve import retrieve
 from app.build_prompt import build_prompt
@@ -24,7 +24,7 @@ llm = Llama( model_path=model_path,
 # =====================================================
 
 def load_index():
-
+    from app.constants import INDEX_PATH
     index = faiss.read_index(INDEX_PATH)
 
     with open(
