@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.10-slim
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -7,6 +7,8 @@ ENV PYTHONUNBUFFERED=1 \
     HF_HOME=/data/.cache/huggingface \
     TRANSFORMERS_CACHE=/data/.cache/huggingface/transformers \
     HF_HUB_CACHE=/data/.cache/huggingface/hub
+
+ENV CMAKE_BUILD_PARALLEL_LEVEL=2    
 
 # System deps for python packages that require compilation (keep minimal)
 RUN apt-get update && \
