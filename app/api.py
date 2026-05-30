@@ -31,7 +31,7 @@ def load_index():
 
     return index, texts
 
-index, texts = load_index()
+
 
 # =====================================================
 async def process_chat(
