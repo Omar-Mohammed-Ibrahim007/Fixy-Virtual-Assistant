@@ -8,7 +8,7 @@ from app.schemas import (
 )
 from app.get_user_data import get_user_data 
 from app.email_service import email_send
-from app.state import state
+from app.state as state
 from app.constants import INDEX_PATH,TEXTS_PATH
 import json
 import faiss
