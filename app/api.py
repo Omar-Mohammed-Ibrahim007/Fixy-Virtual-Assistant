@@ -1,6 +1,6 @@
 
 import time
-from app.ask import ask
+from app.ask import ask, load_index
 from app.response_cleaner import clean_llm_response
 from app.schemas import (
     ChatGetRequest,
@@ -9,7 +9,7 @@ from app.schemas import (
 )
 from app.get_user_data import get_user_data 
 from app.email_service import email_send
-
+index, texts = load_index()
 async def process_chat(
     request_data: dict # post request data sended by client
 ) -> ChatResponse:
@@ -22,11 +22,14 @@ async def process_chat(
         **request_data
     )
     start_time = time.time()
-
+    
+   
     response = ask(
         post_request.query,
         get_request.role,
-        get_request.language
+        get_request.language,
+        index,
+        texts
     )
     
     print("We almost there..") 

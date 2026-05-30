@@ -43,11 +43,10 @@ def load_index():
 # ASK
 # =====================================================
 
-def ask(query,role,language):
+def ask(query,role,language,index,texts):
 
-    index, texts = load_index()
    
-   
+
     # -------------------------------------------------
     # RETRIEVE
     # -------------------------------------------------
@@ -87,7 +86,7 @@ def ask(query,role,language):
 
         max_tokens=4096,
 
-        temperature=0.1,
+        temperature=0.3,
 
         top_p=0.8,
 
