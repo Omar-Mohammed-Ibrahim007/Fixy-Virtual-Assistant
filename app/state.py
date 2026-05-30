@@ -1,0 +1,2 @@
+index = None
+texts = None

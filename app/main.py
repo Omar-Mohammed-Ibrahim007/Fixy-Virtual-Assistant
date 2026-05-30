@@ -5,7 +5,8 @@ from app.routes import router
 from app.chunker import chunker_main
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-
+import app.state as state
+from app.api import load_index
 @asynccontextmanager # run these functions only at startupno every reload
 async def lifespan(app: FastAPI):
     cleaner_main()
@@ -15,5 +16,10 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
+@app.on_event("startup")
+def startup_event():
+    state.index, state.texts = load_index()
+    print("✅ FAISS index loaded once at startup")
+    
 app.include_router(router)
 
