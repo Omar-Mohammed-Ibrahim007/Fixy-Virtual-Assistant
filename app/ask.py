@@ -1,8 +1,5 @@
 from llama_cpp import Llama
-import faiss
-import json
 import os
-from app.constants import  TEXTS_PATH
 from app.llm import model_path
 from app.retrieve import retrieve
 from app.build_prompt import build_prompt
@@ -18,25 +15,6 @@ llm = Llama( model_path=model_path,
              verbose=False,
              #n_batch=512,
              f16_kv=True,)
-
-# =====================================================
-# LOAD INDEX
-# =====================================================
-
-def load_index():
-    from app.constants import INDEX_PATH
-    index = faiss.read_index(INDEX_PATH)
-
-    with open(
-        TEXTS_PATH,
-        "r",
-        encoding="utf-8"
-    ) as f:
-
-        texts = json.load(f)
-
-    return index, texts
-
 
 
 # =====================================================

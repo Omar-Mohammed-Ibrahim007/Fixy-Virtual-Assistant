@@ -9,6 +9,28 @@ from app.schemas import (
 )
 from app.get_user_data import get_user_data 
 from app.email_service import email_send
+from app.constants import INDEX_PATH,TEXTS_PATH
+import json
+import faiss
+# =====================================================
+# LOAD INDEX
+# =====================================================
+
+def load_index():
+    
+    index = faiss.read_index(INDEX_PATH)
+
+    with open(
+        TEXTS_PATH,
+        "r",
+        encoding="utf-8"
+    ) as f:
+
+        texts = json.load(f)
+
+    return index, texts
+
+
 
 index, texts = load_index()
 
