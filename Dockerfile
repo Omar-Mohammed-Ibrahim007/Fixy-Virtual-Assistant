@@ -4,9 +4,11 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONPATH=/app \
     PORT=7860 \
-    HF_HOME=/home/user/.cache/huggingface \
-    TRANSFORMERS_CACHE=/home/user/.cache/huggingface/transformers \
-    HF_HUB_CACHE=/home/user/.cache/huggingface/hub \
+    HF_HOME=/tmp/hf_cache \
+    TRANSFORMERS_CACHE=/tmp/hf_cache/transformers \
+    HF_HUB_CACHE=/tmp/hf_cache/hub \
+    XDG_CACHE_HOME=/tmp/hf_cache \
+    TORCH_HOME=/tmp/hf_cache/torch \
     CMAKE_BUILD_PARALLEL_LEVEL=2
 
 # System dependencies
@@ -20,19 +22,19 @@ RUN apt-get update && \
 # Create non-root user
 RUN useradd -m -u 1000 user
 
-# Create Hugging Face cache directories and give ownership
-RUN mkdir -p /home/user/.cache/huggingface && \
-    chown -R user:user /home/user/.cache
+# Force fully ephemeral cache dirs
+RUN mkdir -p /tmp/hf_cache && \
+    chown -R user:user /tmp/hf_cache
 
 WORKDIR /app
 
-# Install dependencies first
+# Install dependencies
 COPY --chown=user:user assets/requirements.txt /app/requirements.txt
 
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r /app/requirements.txt
 
-# Copy application
+# Copy app
 COPY --chown=user:user . /app
 
 USER user
