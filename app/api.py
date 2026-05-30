@@ -14,7 +14,7 @@ async def process_chat(
     request_data: dict # post request data sended by client
 ) -> ChatResponse:
 
-    get_request = await ChatGetRequest( # get request
+    get_request =  ChatGetRequest( # get request
     **get_user_data()
     )
     post_request=ChatPostRequest(
