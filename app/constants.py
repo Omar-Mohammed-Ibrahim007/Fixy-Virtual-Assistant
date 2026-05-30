@@ -15,7 +15,7 @@ INPUT_PDF =f'{Dataset_dir}/Fixy_RAG_Production_English.pdf'
 OUTPUT_JSON = f"{Assets_dir}/rag_english_data.json"
 
 MODEL_REPO = "Qwen/Qwen3-4B-GGUF"
-MODEL_FILE = "Qwen3-4B-Q8_0.gguf"
+MODEL_FILE = "Qwen3-4B-Q5_K_M.gguf"
 
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587

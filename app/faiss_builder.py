@@ -20,7 +20,10 @@ def build_index(chunks):
 
     dim = embeddings.shape[1]
 
-    index = faiss.IndexFlatIP(dim)
+    index = faiss.IndexHNSWFlat(dim,32)  #IndexHNSWFlat smart search by graphs ,IndexFlatIP optimal solution guartneed but linear search o(n)
+    # 32 are binary connections between nodes
+    
+    
     index.add(embeddings)
 
     return index

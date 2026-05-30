@@ -17,6 +17,7 @@ async def process_chat(
     get_request =  ChatGetRequest( # get request
     **get_user_data()
     )
+    print("Getting close...") 
     post_request=ChatPostRequest(
         **request_data
     )
@@ -28,9 +29,11 @@ async def process_chat(
         get_request.language
     )
     
+    print("We almost there..") 
     response=clean_llm_response(response)
    
-    
+   
+      
     
 
     response_time = round(
