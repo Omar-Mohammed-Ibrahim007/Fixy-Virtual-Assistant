@@ -4,18 +4,22 @@ A retrieval-augmented generation (RAG) assistant built with FastAPI, Faiss, and 
 
 This project processes source documents, extracts question-answer data, builds a vector index, and serves a FastAPI HTTP endpoint so users can query the knowledge base.
 
+For Hugging Face Spaces/Docker, see `assets/Dockerfile` (port 7860 + Hugging Face cache environment variables).
+
+
 ## Key Components
 
-- `main.py` - FastAPI application entrypoint with router inclusion.
-- `routes.py` - WebSocket chat route handling requests and responses.
-- `ask.py` - RAG query workflow: retrieval, prompt construction, and LLM response generation.
-- `data_cleaner.py` - Extracts and cleans PDF-based Q&A content.
-- `chunker.py` - Loads cleaned data and prepares chunks for vector indexing.
-- `faiss_builder.py` - Builds and saves the FAISS index.
-- `retrieve.py` - Performs semantic retrieval against the FAISS index.
-- `build_prompt.py` / `prompt_builder.py` - Creates prompts for the language model.
-- `embeddings.py` - Embedding helper utilities.
-- `schemas.py` - Pydantic models for chat request and response payloads.
+- `app/main.py` - FastAPI application entrypoint. Runs `cleaner_main()` and `chunker_main()` at startup (lifespan hook).
+- `app/routes.py` - HTTP endpoint for the assistant:
+  - `POST /support/Fixy_AI_assistant`
+- `app/api.py` - Request handling. Builds a `ChatRequest` from `app/get_user_data.py` and runs the RAG pipeline.
+- `app/ask.py` - Core RAG workflow: loads FAISS index, retrieves relevant context, builds the prompt, generates with the local LLM, and cleans the output.
+- `app/data_cleaner.py` - Extracts and cleans PDF-based Q&A content.
+- `app/chunker.py` - Loads cleaned data and prepares it for vector indexing.
+- `app/faiss_builder.py` - Builds and saves the FAISS index.
+- `app/retrieve.py` - Performs semantic retrieval against the FAISS index.
+- `app/build_prompt.py` - Creates prompts for the language model.
+- `app/schemas.py` - Pydantic models for chat request and response payloads.
 
 ## Requirements
 
@@ -40,42 +44,63 @@ pip install -r assets/requirements.txt
 
 3. Ensure your data and assets are available (paths are defined in `app/constants.py`):
 
-- `Fixy_RAG/data/` should contain `Fixy_RAG_Production_English.pdf`
+- `Fixy_RAG/data/` should contain:
+  - `Fixy_RAG_Production_English.pdf`
 - `Fixy_RAG/assets/` should contain (or be generated into):
-  - `faiss.index`
-  - `texts.json`
-  - any required model files (see `MODEL_NAME`, `MODEL_REPO`, `MODEL_FILE` in `app/constants.py`)
+  - `faiss.index` (used for retrieval)
+  - `texts.json` (used alongside the FAISS index)
 
-4. Configure credentials (email):
+4. Email credentials (used when `needs_support=true`):
 
-`app/constants.py` imports credentials from `app/env.py` (module import: `from .env import EMAIL, EMAIL_API_KEY`).
+`app/constants.py` reads these from environment variables (via `app/env.py` / `.env` using `dotenv`):
 
-Create `app/env.py`:
-
-```python
-EMAIL = "your-email@example.com"
-EMAIL_API_KEY = "your-email-api-key"
-```
+- `RECIEVER_EMAIL`
+- `RECIEVER_EMAIL_API_KEY`
+- `SENDER_EMAIL`
+- `SENDER_EMAIL_API_KEY`
 
 ## Running the project
 
-Start the FastAPI app with Uvicorn:
+Start the FastAPI app with Uvicorn (default port 8000 for local dev):
 
 ```powershell
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-## API Usage (chat)
+## Docker / Hugging Face Spaces
 
-Send a POST request to:
+The provided `assets/Dockerfile` is configured for:
 
-- `POST http://localhost:8000/support/chatbot`
+- Port: `7860`
+- Host binding: `0.0.0.0`
+- Hugging Face cache envs:
+  - `HF_HOME`
+  - `TRANSFORMERS_CACHE`
+  - `HF_HUB_CACHE`
+
+Build/run instructions are documented in `assets/Dockerfile` behavior (see `CMD ... --port ${PORT}`).
+
+## API Usage (support assistant)
+
+This service exposes a single HTTP POST endpoint:
+
+- `POST http://localhost:8000/support/Fixy_AI_assistant`
+
+> Important: `app/api.py` ignores/overrides the client payload and constructs the `ChatRequest` using `app/get_user_data.py` (it fetches/returns user context; it falls back to a sample payload on error).
+
 
 Request body (`ChatRequest`):
 
+Because the server builds `ChatRequest` using `app/get_user_data.py`, your client payload may not be used as-is. Still, the `ChatRequest` model fields are:
+
 ```json
 {
-  "query": "How do I reset my Fixy account password?"
+  "query": "How do I reset my Fixy account password?",
+  "email": "example@gmail.com",
+  "role": "user",
+  "userID": 123,
+  "username": "some-user",
+  "language": "en"
 }
 ```
 
@@ -84,24 +109,40 @@ Response (`ChatResponse`):
 ```json
 {
   "title": "Fixy RAG Assistant",
+  "section": "General",
   "response_time": 0.42,
   "code": 200,
-  "description": "Response generated successfully",
-  "response": "..."
+  "name": "answer_found",
+  "description": "Answer exists in context or reliable knowledge",
+  "response": "...",
+  "escalate_to_support": false,
+  "source": "Unknown"
 }
 ```
 
 ## Workflow
 
-1. `data_cleaner.py` extracts text and creates cleaned Q&A data from the input PDF.
-2. `chunker.py` converts cleaned items into chunks and builds a FAISS vector index.
-3. `ask.py` uses the index and retrieval pipeline to fetch relevant content for a user query.
-4. The model generates a response and returns it via the WebSocket chat route.
+On server startup (`app/main.py` lifespan hook):
+
+1. `app/data_cleaner.py` extracts and cleans the PDF content.
+2. `app/chunker.py` prepares cleaned items for indexing.
+
+At request time (`POST /support/Fixy_AI_assistant`):
+
+1. `app/api.py` builds a `ChatRequest` using `app/get_user_data.py`.
+2. `app/ask.py`:
+   - loads `faiss.index` + `texts.json`
+   - retrieves relevant documents (`app/retrieve.py`)
+   - builds a prompt (`app/build_prompt.py`)
+   - generates using the local LLM (`app/llm.py` via LangChain Llama)
+   - cleans the output (`app/response_cleaner.py`)
+3. If `needs_support=true`, `app/email.py` sends an escalation email.
 
 ## Notes
 
-- The current implementation uses local LLM tooling and FAISS for embedding/retrieval (see `app/constants.py` and the RAG pipeline in `app/ask.py`).
-- Adjust `app/constants.py` if you need to change dataset paths, model repo names, or index locations.
+- Retrieval uses FAISS with embeddings configured in `app/embeddings.py` (configured via `app/constants.py` for model/index paths).
+- Generation uses a local LLM (see `app/llm.py` and `app/ask.py` for inference parameters).
+- Adjust `app/constants.py` if you need to change dataset paths, model repo/file names, or index/data locations.
 
 ## License
 

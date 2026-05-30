@@ -1,4 +1,3 @@
-
 def build_prompt(query: str, context: str, history: str = "", 
                  user_role: str = "unknown", lang: str = "auto") -> str:
 

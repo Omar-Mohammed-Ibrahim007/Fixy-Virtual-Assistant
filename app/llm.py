@@ -8,4 +8,3 @@ model_path = hf_hub_download(
     cache_dir="./Fixy_RAG/RAG/"
 )
 
-print(model_path)

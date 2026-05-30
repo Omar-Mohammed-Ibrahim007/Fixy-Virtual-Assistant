@@ -6,28 +6,47 @@ from schemas import (
     ChatRequest,
     ChatResponse
 )
-
+from app.get_user_data import get_user_data 
+from app.email import email_send
 
 async def process_chat(
     request_data: dict
 ) -> ChatResponse:
 
     request = ChatRequest(
-        **request_data
+    **get_user_data()
     )
 
     start_time = time.time()
 
     response = ask(
-        request.query
+        request.query,
+        request.role,
+        request.language
     )
     
     response=clean_llm_response(response)
+   
+    
+    
 
     response_time = round(
         time.time() - start_time,
         2
     )
+     
+    if response.get("needs_support", False):
+        email_send(
+            request.language,
+            response.get("title", "null"),
+            response.get("code", "null"),
+            request.userID,
+            request.role,
+            request.email,
+            response.get("name","null" ),
+            request.query,
+            response_time
+        )
 
     return ChatResponse(
 
@@ -43,7 +62,7 @@ async def process_chat(
 
         description=response.get("code_title")['description']if response.get("code_title") else "Unknown",
 
-        response=response.get("response", "No response")    
+        response=response.get("response", "No response"),   
         
         escalate_to_support=response.get("needs_support", False),
         

@@ -11,7 +11,7 @@ router = APIRouter(tags=["virtual_assistant"])
 
 
 @router.post(
-    "/support/virtual_assistant",
+    "/support/Fixy_AI_assistant",
     response_model=ChatResponse
 )
 async def chatbot(
@@ -22,4 +22,4 @@ async def chatbot(
         request.model_dump()
     )
 
-    return result
+    return result 

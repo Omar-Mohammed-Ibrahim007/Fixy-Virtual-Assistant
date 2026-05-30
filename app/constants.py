@@ -1,4 +1,8 @@
-from .env import EMAIL, EMAIL_API_KEY
+import os
+from dotenv import load_dotenv
+from app.get_user_data import content
+
+load_dotenv()
 
 Dataset_dir='./Fixy_RAG/data'
 Assets_dir='./Fixy_RAG/assets'
@@ -17,9 +21,10 @@ MODEL_FILE = "Qwen3-4B-Q6_K.gguf"
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 
-EMAIL_ADDRESS = EMAIL
-EMAIL_PASSWORD = EMAIL_API_KEY
-
+RECIEVER_EMAIL_ADDRESS = os.getenv("RECIEVER_EMAIL")
+RECIEVER_EMAIL_PASSWORD = os.getenv("RECIEVER_EMAIL_API_KEY")
+SENDER_EMAIL_ADDRESS= os.getenv("SENDER_EMAIL")
+SENDER_EMAIL_PASSWORD= os.getenv("SENDER_EMAIL_API_KEY")
 
 CODES = {
 
@@ -53,13 +58,6 @@ CODES = {
     },
   }
 
-code=''
-user=''
-role=''
-email='' 
-Type='' 
-query=''
-time=''
 messages = {
 
     "en": f"""

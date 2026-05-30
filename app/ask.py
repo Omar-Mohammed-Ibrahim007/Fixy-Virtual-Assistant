@@ -9,7 +9,7 @@ from app.build_prompt import build_prompt
 from app.faiss_builder import build_index, save_index
 from app.chunker import load_data, chunk_documents
 from app.response_cleaner import clean_llm_response
-from app.get_user_data import response
+from app.get_user_data import content
 from app.schemas import ChatRequest
 
 
@@ -46,7 +46,7 @@ def load_index():
 # ASK
 # =====================================================
 
-def ask(query):
+def ask(query,role,language):
 
     index, texts = load_index()
    
@@ -73,8 +73,11 @@ def ask(query):
     # -------------------------------------------------
 
     prompt = build_prompt(
-        query,
-        context
+        query=query,
+        context=context,
+        lang=language,
+        user_role=role
+       
     )
 
     # -------------------------------------------------

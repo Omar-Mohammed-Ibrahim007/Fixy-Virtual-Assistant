@@ -9,6 +9,12 @@ from typing import Optional
 class ChatRequest(BaseModel):
 
     query: str
+    email: str
+    role: str
+    userID: int
+    username: str
+    language: Optional[str] = "en"
+    
 
 
 # ==========================================
