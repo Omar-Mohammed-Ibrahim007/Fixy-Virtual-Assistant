@@ -1,3 +1,12 @@
+---
+title: Fixy Virtual Assistant
+emoji: 🤖
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_file: app/main.py
+pinned: false
+---
 # Fixy RAG
 
 A retrieval-augmented generation (RAG) assistant built with FastAPI, Faiss, and local LLM integration.
