@@ -4,34 +4,39 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONPATH=/app \
     PORT=7860 \
-    HF_HOME=/data/.cache/huggingface \
-    TRANSFORMERS_CACHE=/data/.cache/huggingface/transformers \
-    HF_HUB_CACHE=/data/.cache/huggingface/hub
+    HF_HOME=/home/user/.cache/huggingface \
+    TRANSFORMERS_CACHE=/home/user/.cache/huggingface/transformers \
+    HF_HUB_CACHE=/home/user/.cache/huggingface/hub \
+    CMAKE_BUILD_PARALLEL_LEVEL=2
 
-ENV CMAKE_BUILD_PARALLEL_LEVEL=2    
-
-# System deps for python packages that require compilation (keep minimal)
+# System dependencies
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends build-essential cmake git && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    cmake \
+    git && \
     rm -rf /var/lib/apt/lists/*
 
-# Non-root user (recommended for Hugging Face Spaces)
+# Create non-root user
 RUN useradd -m -u 1000 user
+
+# Create Hugging Face cache directories and give ownership
+RUN mkdir -p /home/user/.cache/huggingface && \
+    chown -R user:user /home/user/.cache
 
 WORKDIR /app
 
-# Install dependencies first (better caching)
-COPY --chown=user:1000 assets/requirements.txt /app/requirements.txt
+# Install dependencies first
+COPY --chown=user:user assets/requirements.txt /app/requirements.txt
+
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r /app/requirements.txt
 
-# Copy application code
-COPY --chown=user:1000 . /app
+# Copy application
+COPY --chown=user:user . /app
 
 USER user
 
 EXPOSE 7860
 
-# Use the exec form (no shell) for better signal handling
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "7860"]
-
